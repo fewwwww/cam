@@ -1,0 +1,44 @@
+<html>
+
+<head>
+  <title>Open Webcam</title>
+</head>
+
+<body style="margin: 0">
+  <button id="startBtn" onclick="openCam()"
+    style="z-index: 1; cursor: pointer; margin: auto; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); height: 5vh; width: 10vw;">
+    Open Webcam
+  </button>
+  <video id="videoCam" style="min-height: 100vh; min-width: 100vw;"></video>
+  <script>
+    function openCam() {
+      let All_mediaDevices = navigator.mediaDevices
+      if (!All_mediaDevices || !All_mediaDevices.getUserMedia) {
+        console.log("getUserMedia() not supported.");
+        return;
+      }
+      All_mediaDevices.getUserMedia({
+        audio: true,
+        video: true
+      })
+        .then(function (vidStream) {
+          var video = document.getElementById('videoCam');
+          if ("srcObject" in video) {
+            video.srcObject = vidStream;
+          } else {
+            video.src = window.URL.createObjectURL(vidStream);
+          }
+          video.onloadedmetadata = function (e) {
+            video.play();
+          };
+          var startBtn = document.getElementById('startBtn');
+          startBtn.style.display = 'none';
+        })
+        .catch(function (e) {
+          console.log(e.name + ": " + e.message);
+        });
+    }
+  </script>
+</body>
+
+</html>
